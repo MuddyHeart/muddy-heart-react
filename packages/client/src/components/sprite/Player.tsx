@@ -34,7 +34,7 @@ const Player = ({
   stopLastFrame,
   actionConfig,
   state,
-  name=" ",
+  name = " ",
 }: IPlayer) => {
   const {
     startFrame,
@@ -45,9 +45,9 @@ const Player = ({
     state,
   });
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center sword-cursor">
       <div className="flex flex-col items-center">
-        <div className="font-medium text-white text-sm">{name}</div>
+        <div className="text-white text-sm bit-font">{name}</div>
         <ProgressBar
           percentage={80}
           barSize="w-16"

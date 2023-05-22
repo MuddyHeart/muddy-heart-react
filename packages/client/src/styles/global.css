@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bit-font {
+    font-family: 'Press Start 2P', cursive;
+}
+
+.sword-cursor {
+    cursor: url("../public/sword_cursor.png"), auto;
+}
