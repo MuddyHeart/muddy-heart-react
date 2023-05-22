@@ -24,6 +24,7 @@ export const useFrameAnimation = ({
       ...action,
       startFrame: action.frame.start - 1,
       endFrame: action.frame.end,
+      stopLastFrame: action.name !== "Idle"
     }
   }, [actionConfig, state]);
 

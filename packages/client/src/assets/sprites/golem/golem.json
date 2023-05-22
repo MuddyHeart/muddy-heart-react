@@ -1,20 +1,20 @@
 [
   {
-    "name": "idle",
+    "name": "Idle",
     "frame": {
       "start": 11,
       "end": 13
     }
   },
   {
-    "name": "attack",
+    "name": "Attack",
     "frame": {
       "start": 1,
       "end": 6
     }
   },
   {
-    "name": "die",
+    "name": "Die",
     "frame": {
       "start": 7,
       "end": 10
