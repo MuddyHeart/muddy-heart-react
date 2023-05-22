@@ -1,7 +1,7 @@
 interface IProgressBar {
   percentage: number | string;
   border?: boolean;
-  borderColor?: string;
+  borderStyle?: string;
   bgProgress?: string;
   bgBar?: string;
   barSize?: string;
@@ -10,17 +10,17 @@ interface IProgressBar {
 const ProgressBar = ({
   percentage,
   border = true,
-  borderColor = "border-white",
+  borderStyle = "border border-white",
   bgProgress = "bg-white",
   bgBar = "bg-neutral-700",
   barSize = "w-56",
 }: IProgressBar) => {
   return (
     <div
-      className={`${border} ${borderColor} ${bgProgress} ${barSize} rounded-full`}
+      className={`${border && borderStyle} ${bgBar} ${barSize} rounded-full border`}
     >
       <div
-        className={`${bgBar} py-1 rounded-full transition-all duration-300`}
+        className={`${bgProgress} py-1 rounded-full transition-all duration-300`}
         style={{ width: `${percentage}%` }}
       />
     </div>
