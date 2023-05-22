@@ -8,7 +8,7 @@ export default function MainLayout() {
   return (
     <div className="w-full h-screen bg-gray-100">
       {isSyncStateLive ? (
-        <div className="bg-gray-900 h-full mx-auto">
+        <div className="bg-main-purple h-full mx-auto">
           <Outlet />
         </div>
       ) : (
