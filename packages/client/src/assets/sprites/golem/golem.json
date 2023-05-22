@@ -1,0 +1,23 @@
+[
+  {
+    "name": "idle",
+    "frame": {
+      "start": 11,
+      "end": 13
+    }
+  },
+  {
+    "name": "attack",
+    "frame": {
+      "start": 1,
+      "end": 6
+    }
+  },
+  {
+    "name": "die",
+    "frame": {
+      "start": 7,
+      "end": 10
+    }
+  }
+]
