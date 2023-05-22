@@ -1,4 +1,5 @@
 import { useFrameAnimation } from "../../hooks/useFrameAnimation";
+import ProgressBar from "../loading/ProgressBar";
 import Animation from "./Animation";
 
 interface IAction {
@@ -20,6 +21,7 @@ interface IPlayer {
   stopLastFrame?: boolean;
   actionConfig: IAction[];
   state: string;
+  name?: string;
 }
 
 const Player = ({
@@ -32,6 +34,7 @@ const Player = ({
   stopLastFrame,
   actionConfig,
   state,
+  name=" ",
 }: IPlayer) => {
   const {
     startFrame,
@@ -42,8 +45,17 @@ const Player = ({
     state,
   });
   return (
-    <div>
-      <div>Progress Bar...</div>
+    <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center">
+        <div className="font-medium text-white text-sm">{name}</div>
+        <ProgressBar
+          percentage={80}
+          barSize="w-16"
+          bgBar="bg-main-purple"
+          bgProgress="bg-main-green"
+          border={false}
+        />
+      </div>
       <Animation
         sprite={sprite}
         startFrame={startFrame}
@@ -53,7 +65,7 @@ const Player = ({
         heigth={heigth}
         scale={scale}
         startAnimate={startAnimate}
-        stopLastFrame={stopLastFrame ? stopLastFrame : _stopLastFrame}
+        stopLastFrame={stopLastFrame !== undefined ? stopLastFrame : _stopLastFrame}
       />
     </div>
   );
