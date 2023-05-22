@@ -2,6 +2,7 @@ import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } 
 import Home from './pages/Home';
 import Game from './pages/Game';
 import MainLayout from './MainLayout';
+import { GameDraft } from './pages/GameDraft';
 
 export const App = () => {
 
@@ -10,6 +11,7 @@ export const App = () => {
       <Route path="/" element={<MainLayout/>} >
         <Route index element={<Home />} />
         <Route path='game' element={<Game />} />
+        <Route path='game-draft' element={<GameDraft />} />
       </Route>
     )
   )

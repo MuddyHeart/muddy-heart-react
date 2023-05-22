@@ -5,12 +5,53 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Counter: (() => {
-      const tableId = new TableId("", "Counter");
+    Account: (() => {
+      const tableId = new TableId("", "Account");
       return defineComponent(
         world,
         {
-          value: RecsType.Number,
+          name: RecsType.String,
+          skillSet: RecsType.StringArray,
+          areanaId: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Player: (() => {
+      const tableId = new TableId("", "Player");
+      return defineComponent(
+        world,
+        {
+          hp: RecsType.Number,
+          mp: RecsType.Number,
+          atk: RecsType.Number,
+          def: RecsType.Number,
+          nextCasts: RecsType.NumberArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Skill: (() => {
+      const tableId = new TableId("", "Skill");
+      return defineComponent(
+        world,
+        {
+          name: RecsType.String,
+          atk: RecsType.Number,
+          def: RecsType.Number,
+          heal: RecsType.Number,
+          castTime: RecsType.Number,
+          cooldown: RecsType.Number,
         },
         {
           metadata: {
