@@ -1,6 +1,6 @@
 import title from "../public/title.png";
 import description from "../public/description.png";
-import playButton from "../public/play_button.png";
+import playButton from "../public/button/play_button.png";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
       <img src={title} className="" />
       <img src={description} className="mt-3" />
       <Link
-        to={"/game"}
+        to={"/select-skill"}
         relative="path"
         className="hover:scale-110 duration-200"
       >
