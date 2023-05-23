@@ -1,4 +1,4 @@
-import loadingMonster from "/assets/loadingMonster.png";
+import loadingMonster from "../public/loadingMonster.png";
 import { useLoading } from "../hooks/useLoading";
 import ProgressBar from "../components/loading/ProgressBar";
 
