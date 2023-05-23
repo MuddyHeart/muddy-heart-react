@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.0;
+
+import { System } from "@latticexyz/world/src/System.sol";
+
+contract TestSystem is System {
+  function testCall() external {
+    
+  }
+}
