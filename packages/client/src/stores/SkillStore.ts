@@ -34,7 +34,7 @@ const store = (set: any, get: any) => ({
     // skillTmp.currentCooldown = new Date().valueOf() + skillTmp.cooldown;
     set({ [skill]: skillTmp });
   },
-  exectueSkill: async (skill: skillSlotType) => {
+  exectueSkill: async (skill: any) => {
     if (get().isSelectingTarget) get().cancelTargetSkill();
     if (get()[skill].isTargetType) {
       set({ selectingTargetSkill: skill });

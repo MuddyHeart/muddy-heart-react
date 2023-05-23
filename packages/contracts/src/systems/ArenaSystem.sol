@@ -21,7 +21,7 @@ contract ArenaSystem is System {
     bytes32 id = getUniqueEntity();
     bytes32 player = addressToEntityKey(_msgSender());
 
-    bytes32[] memory players = new bytes32[](8);
+    bytes32[] memory players = new bytes32[](6);
     players[0] = initPlayer();
 
     Arena.set(id, ArenaData({ status: WAITING, players: players }));

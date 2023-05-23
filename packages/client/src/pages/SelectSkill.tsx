@@ -1,9 +1,8 @@
-import useSkillStore, { ISkillItem } from "../stores/SkillStore";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../public/button/back_button.png";
 import SaveButton from "../public/button/save_button.png";
 import SkillItem from "../components/skill/SkillItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSkillInventory } from "../hooks/useSkillInventory";
 import { useSkillset } from "../hooks/useSkillset";
 import { useMUD } from "../MUDContext";
