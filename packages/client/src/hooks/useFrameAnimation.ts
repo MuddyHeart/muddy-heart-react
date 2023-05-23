@@ -1,32 +1,47 @@
 import { useMemo } from "react";
 
 interface IAction {
-  name: string;
+  state: string;
+  sprite: string;
   frame: {
     start: number;
     end: number;
   };
+  height: number;
+  width: number;
+  fps: number;
+  scale?: number;
 }
 
 interface IUseFrameAnimation {
+  sprites: { [key: string]: string };
   actionConfig: IAction[];
   state: string;
 }
 
 export const useFrameAnimation = ({
+  sprites,
   actionConfig,
   state,
 }: IUseFrameAnimation) => {
   const currentAction = useMemo(() => {
-    const action = actionConfig.find((action) => action.name === state);
-    if(!action) return;
+    const action = actionConfig.find((action) => action.state === state);
+    if (!action || !sprites[action.sprite])
+      return {
+        ...action,
+        startFrame: 0,
+        endFrame: 0,
+        stopLastFrame: true,
+        sprite: sprites[0],
+      };
     return {
       ...action,
       startFrame: action.frame.start - 1,
       endFrame: action.frame.end,
-      stopLastFrame: action.name !== "Idle"
-    }
-  }, [actionConfig, state]);
+      stopLastFrame: action.state !== "Idle",
+      sprite: sprites[action.sprite],
+    };
+  }, [actionConfig, sprites, state]);
 
   return {
     ...currentAction,

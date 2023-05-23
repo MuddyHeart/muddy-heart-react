@@ -1,24 +1,27 @@
+import WaitArena from "./pages/WaitArena";
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import Game from './pages/Game';
 import MainLayout from './MainLayout';
-import { GameDraft } from './pages/GameDraft';
+import SelectSkill from './pages/SelectSkill';
+import CreateUser from './pages/CreateUser';
 
 export const App = () => {
-
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<MainLayout/>} >
-        <Route index element={<Home />} />
-        <Route path='game' element={<Game />} />
-        <Route path='game-draft' element={<GameDraft />} />
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<CreateUser />} />
+        <Route path="game" element={<Game />} />
+        <Route path="waiting" element={<WaitArena />} />
+        <Route path='select-skill' element={<SelectSkill />} />
+        <Route path="home" element={<Home />} />
       </Route>
     )
-  )
+  );
 
   return (
     <>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </>
   );
 };

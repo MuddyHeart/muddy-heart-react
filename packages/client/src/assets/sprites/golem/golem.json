@@ -1,23 +1,35 @@
 [
   {
-    "name": "Idle",
+    "state": "Idle",
+    "sprite": "Golem",
     "frame": {
       "start": 11,
       "end": 13
-    }
+    },
+    "width": 32,
+    "height": 32,
+    "fps": 5
   },
   {
-    "name": "Attack",
+    "state": "Attack",
+    "sprite": "Golem",
     "frame": {
       "start": 1,
       "end": 6
-    }
+    },
+    "width": 32,
+    "height": 32,
+    "fps": 5
   },
   {
-    "name": "Die",
+    "state": "Die",
+    "sprite": "Golem",
     "frame": {
       "start": 7,
       "end": 10
-    }
+    },
+    "width": 32,
+    "height": 32,
+    "fps": 5
   }
 ]

@@ -4,7 +4,7 @@ interface ISpriteAnimation {
   sprite: string;
   fps?: number;
   width?: number;
-  heigth?: number;
+  height?: number;
   scale?: number;
   startFrame?: number;
   endFrame?: number;
@@ -12,13 +12,14 @@ interface ISpriteAnimation {
   stopLastFrame?: boolean;
   onClick?: () => void;
   className?: string;
+  onEnd?: () => void;
 }
 
 const SpriteAnimation = ({
   sprite,
   fps = 5,
   width = 32,
-  heigth = 32,
+  height = 32,
   scale = 1,
   startFrame = 0,
   endFrame = 3,
@@ -26,6 +27,7 @@ const SpriteAnimation = ({
   stopLastFrame = false,
   onClick,
   className = "",
+  onEnd,
 }: ISpriteAnimation) => {
   return (
     <div onClick={onClick} className={className}>
@@ -34,7 +36,7 @@ const SpriteAnimation = ({
         shouldAnimate={startAnimate}
         fps={fps}
         width={width}
-        height={heigth}
+        height={height}
         startFrame={startFrame} // start frame [0]
         scale={scale} // scale is 1/5 => x5
         stopLastFrame={stopLastFrame}
@@ -42,6 +44,7 @@ const SpriteAnimation = ({
         reset={!startAnimate}
         wrapAfter={endFrame}
         frameCount={endFrame}
+        onEnd={onEnd}
       />
     </div>
   );

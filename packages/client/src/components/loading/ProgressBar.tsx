@@ -5,6 +5,9 @@ interface IProgressBar {
   bgProgress?: string;
   bgBar?: string;
   barSize?: string;
+  duration?: string;
+  roundedStyle?: string;
+  height?: string;
 }
 
 const ProgressBar = ({
@@ -14,13 +17,16 @@ const ProgressBar = ({
   bgProgress = "bg-white",
   bgBar = "bg-neutral-700",
   barSize = "w-56",
+  duration = "duration-300",
+  roundedStyle = "rounded-full",
+  height = "h-2",
 }: IProgressBar) => {
   return (
     <div
-      className={`${border && borderStyle} ${bgBar} ${barSize} rounded-full`}
+      className={`${border && borderStyle} ${bgBar} ${barSize} ${roundedStyle}`}
     >
       <div
-        className={`${bgProgress} py-1 rounded-full transition-all duration-300`}
+        className={`${bgProgress} ${duration} ${roundedStyle} ${height} transition-all`}
         style={{ width: `${percentage}%` }}
       />
     </div>
