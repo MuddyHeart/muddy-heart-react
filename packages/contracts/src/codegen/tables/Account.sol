@@ -21,18 +21,22 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Accou
 bytes32 constant AccountTableId = _tableId;
 
 struct AccountData {
+  bool initialized;
+  bytes32 avatar;
+  bytes32 arena;
   string name;
   bytes32[] skillSet;
-  bytes32 areanaId;
 }
 
 library Account {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](3);
-    _schema[0] = SchemaType.STRING;
-    _schema[1] = SchemaType.BYTES32_ARRAY;
+    SchemaType[] memory _schema = new SchemaType[](5);
+    _schema[0] = SchemaType.BOOL;
+    _schema[1] = SchemaType.BYTES32;
     _schema[2] = SchemaType.BYTES32;
+    _schema[3] = SchemaType.STRING;
+    _schema[4] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_schema);
   }
@@ -46,10 +50,12 @@ library Account {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](3);
-    _fieldNames[0] = "name";
-    _fieldNames[1] = "skillSet";
-    _fieldNames[2] = "areanaId";
+    string[] memory _fieldNames = new string[](5);
+    _fieldNames[0] = "initialized";
+    _fieldNames[1] = "avatar";
+    _fieldNames[2] = "arena";
+    _fieldNames[3] = "name";
+    _fieldNames[4] = "skillSet";
     return ("Account", _fieldNames);
   }
 
@@ -75,12 +81,114 @@ library Account {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
+  /** Get initialized */
+  function getInitialized(bytes32 key) internal view returns (bool initialized) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Get initialized (using the specified store) */
+  function getInitialized(IStore _store, bytes32 key) internal view returns (bool initialized) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Set initialized */
+  function setInitialized(bytes32 key, bool initialized) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((initialized)));
+  }
+
+  /** Set initialized (using the specified store) */
+  function setInitialized(IStore _store, bytes32 key, bool initialized) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((initialized)));
+  }
+
+  /** Get avatar */
+  function getAvatar(bytes32 key) internal view returns (bytes32 avatar) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    return (Bytes.slice32(_blob, 0));
+  }
+
+  /** Get avatar (using the specified store) */
+  function getAvatar(IStore _store, bytes32 key) internal view returns (bytes32 avatar) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    return (Bytes.slice32(_blob, 0));
+  }
+
+  /** Set avatar */
+  function setAvatar(bytes32 key, bytes32 avatar) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((avatar)));
+  }
+
+  /** Set avatar (using the specified store) */
+  function setAvatar(IStore _store, bytes32 key, bytes32 avatar) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((avatar)));
+  }
+
+  /** Get arena */
+  function getArena(bytes32 key) internal view returns (bytes32 arena) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    return (Bytes.slice32(_blob, 0));
+  }
+
+  /** Get arena (using the specified store) */
+  function getArena(IStore _store, bytes32 key) internal view returns (bytes32 arena) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    return (Bytes.slice32(_blob, 0));
+  }
+
+  /** Set arena */
+  function setArena(bytes32 key, bytes32 arena) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((arena)));
+  }
+
+  /** Set arena (using the specified store) */
+  function setArena(IStore _store, bytes32 key, bytes32 arena) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((arena)));
+  }
+
   /** Get name */
   function getName(bytes32 key) internal view returns (string memory name) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return (string(_blob));
   }
 
@@ -89,7 +197,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return (string(_blob));
   }
 
@@ -98,7 +206,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, bytes((name)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, bytes((name)));
   }
 
   /** Set name (using the specified store) */
@@ -106,7 +214,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 0, bytes((name)));
+    _store.setField(_tableId, _keyTuple, 3, bytes((name)));
   }
 
   /** Get the length of name */
@@ -114,7 +222,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 0, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 3, getSchema());
     return _byteLength / 1;
   }
 
@@ -123,7 +231,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 0, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 3, getSchema());
     return _byteLength / 1;
   }
 
@@ -132,7 +240,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -141,7 +249,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 1, (_index + 1) * 1);
     return (string(_blob));
   }
 
@@ -150,7 +258,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 3, bytes((_slice)));
   }
 
   /** Push a slice to name (using the specified store) */
@@ -158,7 +266,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
+    _store.pushToField(_tableId, _keyTuple, 3, bytes((_slice)));
   }
 
   /** Pop a slice from name */
@@ -166,7 +274,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 0, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 3, 1);
   }
 
   /** Pop a slice from name (using the specified store) */
@@ -174,7 +282,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.popFromField(_tableId, _keyTuple, 0, 1);
+    _store.popFromField(_tableId, _keyTuple, 3, 1);
   }
 
   /** Update a slice of name at `_index` */
@@ -182,7 +290,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 3, _index * 1, bytes((_slice)));
   }
 
   /** Update a slice of name (using the specified store) at `_index` */
@@ -190,7 +298,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
+    _store.updateInField(_tableId, _keyTuple, 3, _index * 1, bytes((_slice)));
   }
 
   /** Get skillSet */
@@ -198,7 +306,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -207,7 +315,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
   }
 
@@ -216,7 +324,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, EncodeArray.encode((skillSet)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, EncodeArray.encode((skillSet)));
   }
 
   /** Set skillSet (using the specified store) */
@@ -224,7 +332,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 1, EncodeArray.encode((skillSet)));
+    _store.setField(_tableId, _keyTuple, 4, EncodeArray.encode((skillSet)));
   }
 
   /** Get the length of skillSet */
@@ -232,7 +340,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 1, getSchema());
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 4, getSchema());
     return _byteLength / 32;
   }
 
@@ -241,7 +349,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 1, getSchema());
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 4, getSchema());
     return _byteLength / 32;
   }
 
@@ -250,7 +358,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 32, (_index + 1) * 32);
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 32, (_index + 1) * 32);
     return (Bytes.slice32(_blob, 0));
   }
 
@@ -259,7 +367,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 32, (_index + 1) * 32);
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 32, (_index + 1) * 32);
     return (Bytes.slice32(_blob, 0));
   }
 
@@ -268,7 +376,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
   }
 
   /** Push an element to skillSet (using the specified store) */
@@ -276,7 +384,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.pushToField(_tableId, _keyTuple, 1, abi.encodePacked((_element)));
+    _store.pushToField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
   }
 
   /** Pop an element from skillSet */
@@ -284,7 +392,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 1, 32);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 4, 32);
   }
 
   /** Pop an element from skillSet (using the specified store) */
@@ -292,7 +400,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.popFromField(_tableId, _keyTuple, 1, 32);
+    _store.popFromField(_tableId, _keyTuple, 4, 32);
   }
 
   /** Update an element of skillSet at `_index` */
@@ -300,7 +408,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 1, _index * 32, abi.encodePacked((_element)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 4, _index * 32, abi.encodePacked((_element)));
   }
 
   /** Update an element of skillSet (using the specified store) at `_index` */
@@ -308,41 +416,7 @@ library Account {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.updateInField(_tableId, _keyTuple, 1, _index * 32, abi.encodePacked((_element)));
-  }
-
-  /** Get areanaId */
-  function getAreanaId(bytes32 key) internal view returns (bytes32 areanaId) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
-    return (Bytes.slice32(_blob, 0));
-  }
-
-  /** Get areanaId (using the specified store) */
-  function getAreanaId(IStore _store, bytes32 key) internal view returns (bytes32 areanaId) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
-    return (Bytes.slice32(_blob, 0));
-  }
-
-  /** Set areanaId */
-  function setAreanaId(bytes32 key, bytes32 areanaId) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((areanaId)));
-  }
-
-  /** Set areanaId (using the specified store) */
-  function setAreanaId(IStore _store, bytes32 key, bytes32 areanaId) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((areanaId)));
+    _store.updateInField(_tableId, _keyTuple, 4, _index * 32, abi.encodePacked((_element)));
   }
 
   /** Get the full data */
@@ -364,8 +438,15 @@ library Account {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, string memory name, bytes32[] memory skillSet, bytes32 areanaId) internal {
-    bytes memory _data = encode(name, skillSet, areanaId);
+  function set(
+    bytes32 key,
+    bool initialized,
+    bytes32 avatar,
+    bytes32 arena,
+    string memory name,
+    bytes32[] memory skillSet
+  ) internal {
+    bytes memory _data = encode(initialized, avatar, arena, name, skillSet);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -374,8 +455,16 @@ library Account {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, string memory name, bytes32[] memory skillSet, bytes32 areanaId) internal {
-    bytes memory _data = encode(name, skillSet, areanaId);
+  function set(
+    IStore _store,
+    bytes32 key,
+    bool initialized,
+    bytes32 avatar,
+    bytes32 arena,
+    string memory name,
+    bytes32[] memory skillSet
+  ) internal {
+    bytes memory _data = encode(initialized, avatar, arena, name, skillSet);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -385,26 +474,30 @@ library Account {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, AccountData memory _table) internal {
-    set(key, _table.name, _table.skillSet, _table.areanaId);
+    set(key, _table.initialized, _table.avatar, _table.arena, _table.name, _table.skillSet);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, AccountData memory _table) internal {
-    set(_store, key, _table.name, _table.skillSet, _table.areanaId);
+    set(_store, key, _table.initialized, _table.avatar, _table.arena, _table.name, _table.skillSet);
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal view returns (AccountData memory _table) {
-    // 32 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 32));
+    // 65 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 65));
 
-    _table.areanaId = (Bytes.slice32(_blob, 0));
+    _table.initialized = (_toBool(uint8(Bytes.slice1(_blob, 0))));
+
+    _table.avatar = (Bytes.slice32(_blob, 1));
+
+    _table.arena = (Bytes.slice32(_blob, 33));
 
     // Store trims the blob if dynamic fields are all empty
-    if (_blob.length > 32) {
+    if (_blob.length > 65) {
       uint256 _start;
       // skip static data length + dynamic lengths word
-      uint256 _end = 64;
+      uint256 _end = 97;
 
       _start = _end;
       _end += _encodedLengths.atIndex(0);
@@ -418,16 +511,26 @@ library Account {
 
   /** Tightly pack full data using this table's schema */
   function encode(
+    bool initialized,
+    bytes32 avatar,
+    bytes32 arena,
     string memory name,
-    bytes32[] memory skillSet,
-    bytes32 areanaId
+    bytes32[] memory skillSet
   ) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](2);
     _counters[0] = uint40(bytes(name).length);
     _counters[1] = uint40(skillSet.length * 32);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
-    return abi.encodePacked(areanaId, _encodedLengths.unwrap(), bytes((name)), EncodeArray.encode((skillSet)));
+    return
+      abi.encodePacked(
+        initialized,
+        avatar,
+        arena,
+        _encodedLengths.unwrap(),
+        bytes((name)),
+        EncodeArray.encode((skillSet))
+      );
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
@@ -450,5 +553,11 @@ library Account {
     _keyTuple[0] = bytes32((key));
 
     _store.deleteRecord(_tableId, _keyTuple);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

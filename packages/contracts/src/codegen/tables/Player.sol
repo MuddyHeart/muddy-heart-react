@@ -22,21 +22,19 @@ bytes32 constant PlayerTableId = _tableId;
 
 struct PlayerData {
   uint32 hp;
-  uint32 mp;
   uint32 atk;
   uint32 def;
-  uint8[] nextCasts;
+  uint32[] nextCasts;
 }
 
 library Player {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](5);
+    SchemaType[] memory _schema = new SchemaType[](4);
     _schema[0] = SchemaType.UINT32;
     _schema[1] = SchemaType.UINT32;
     _schema[2] = SchemaType.UINT32;
-    _schema[3] = SchemaType.UINT32;
-    _schema[4] = SchemaType.UINT8_ARRAY;
+    _schema[3] = SchemaType.UINT32_ARRAY;
 
     return SchemaLib.encode(_schema);
   }
@@ -50,12 +48,11 @@ library Player {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](5);
+    string[] memory _fieldNames = new string[](4);
     _fieldNames[0] = "hp";
-    _fieldNames[1] = "mp";
-    _fieldNames[2] = "atk";
-    _fieldNames[3] = "def";
-    _fieldNames[4] = "nextCasts";
+    _fieldNames[1] = "atk";
+    _fieldNames[2] = "def";
+    _fieldNames[3] = "nextCasts";
     return ("Player", _fieldNames);
   }
 
@@ -115,46 +112,12 @@ library Player {
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((hp)));
   }
 
-  /** Get mp */
-  function getMp(bytes32 key) internal view returns (uint32 mp) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Get mp (using the specified store) */
-  function getMp(IStore _store, bytes32 key) internal view returns (uint32 mp) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Set mp */
-  function setMp(bytes32 key, uint32 mp) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((mp)));
-  }
-
-  /** Set mp (using the specified store) */
-  function setMp(IStore _store, bytes32 key, uint32 mp) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((mp)));
-  }
-
   /** Get atk */
   function getAtk(bytes32 key) internal view returns (uint32 atk) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -163,7 +126,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -172,7 +135,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((atk)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((atk)));
   }
 
   /** Set atk (using the specified store) */
@@ -180,7 +143,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((atk)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((atk)));
   }
 
   /** Get def */
@@ -188,7 +151,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -197,7 +160,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -206,7 +169,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((def)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((def)));
   }
 
   /** Set def (using the specified store) */
@@ -214,41 +177,41 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((def)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((def)));
   }
 
   /** Get nextCasts */
-  function getNextCasts(bytes32 key) internal view returns (uint8[] memory nextCasts) {
+  function getNextCasts(bytes32 key) internal view returns (uint32[] memory nextCasts) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /** Get nextCasts (using the specified store) */
-  function getNextCasts(IStore _store, bytes32 key) internal view returns (uint8[] memory nextCasts) {
+  function getNextCasts(IStore _store, bytes32 key) internal view returns (uint32[] memory nextCasts) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint8());
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
   }
 
   /** Set nextCasts */
-  function setNextCasts(bytes32 key, uint8[] memory nextCasts) internal {
+  function setNextCasts(bytes32 key, uint32[] memory nextCasts) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, EncodeArray.encode((nextCasts)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, EncodeArray.encode((nextCasts)));
   }
 
   /** Set nextCasts (using the specified store) */
-  function setNextCasts(IStore _store, bytes32 key, uint8[] memory nextCasts) internal {
+  function setNextCasts(IStore _store, bytes32 key, uint32[] memory nextCasts) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 4, EncodeArray.encode((nextCasts)));
+    _store.setField(_tableId, _keyTuple, 3, EncodeArray.encode((nextCasts)));
   }
 
   /** Get the length of nextCasts */
@@ -256,8 +219,8 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 4, getSchema());
-    return _byteLength / 1;
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 3, getSchema());
+    return _byteLength / 4;
   }
 
   /** Get the length of nextCasts (using the specified store) */
@@ -265,42 +228,42 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 4, getSchema());
-    return _byteLength / 1;
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 3, getSchema());
+    return _byteLength / 4;
   }
 
   /** Get an item of nextCasts (unchecked, returns invalid data if index overflows) */
-  function getItemNextCasts(bytes32 key, uint256 _index) internal view returns (uint8) {
+  function getItemNextCasts(bytes32 key, uint256 _index) internal view returns (uint32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 1, (_index + 1) * 1);
-    return (uint8(Bytes.slice1(_blob, 0)));
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 4, (_index + 1) * 4);
+    return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get an item of nextCasts (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemNextCasts(IStore _store, bytes32 key, uint256 _index) internal view returns (uint8) {
+  function getItemNextCasts(IStore _store, bytes32 key, uint256 _index) internal view returns (uint32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 4, getSchema(), _index * 1, (_index + 1) * 1);
-    return (uint8(Bytes.slice1(_blob, 0)));
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 4, (_index + 1) * 4);
+    return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Push an element to nextCasts */
-  function pushNextCasts(bytes32 key, uint8 _element) internal {
+  function pushNextCasts(bytes32 key, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.pushToField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
+    StoreSwitch.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
   }
 
   /** Push an element to nextCasts (using the specified store) */
-  function pushNextCasts(IStore _store, bytes32 key, uint8 _element) internal {
+  function pushNextCasts(IStore _store, bytes32 key, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.pushToField(_tableId, _keyTuple, 4, abi.encodePacked((_element)));
+    _store.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
   }
 
   /** Pop an element from nextCasts */
@@ -308,7 +271,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.popFromField(_tableId, _keyTuple, 4, 1);
+    StoreSwitch.popFromField(_tableId, _keyTuple, 3, 4);
   }
 
   /** Pop an element from nextCasts (using the specified store) */
@@ -316,23 +279,23 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.popFromField(_tableId, _keyTuple, 4, 1);
+    _store.popFromField(_tableId, _keyTuple, 3, 4);
   }
 
   /** Update an element of nextCasts at `_index` */
-  function updateNextCasts(bytes32 key, uint256 _index, uint8 _element) internal {
+  function updateNextCasts(bytes32 key, uint256 _index, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.updateInField(_tableId, _keyTuple, 4, _index * 1, abi.encodePacked((_element)));
+    StoreSwitch.updateInField(_tableId, _keyTuple, 3, _index * 4, abi.encodePacked((_element)));
   }
 
   /** Update an element of nextCasts (using the specified store) at `_index` */
-  function updateNextCasts(IStore _store, bytes32 key, uint256 _index, uint8 _element) internal {
+  function updateNextCasts(IStore _store, bytes32 key, uint256 _index, uint32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.updateInField(_tableId, _keyTuple, 4, _index * 1, abi.encodePacked((_element)));
+    _store.updateInField(_tableId, _keyTuple, 3, _index * 4, abi.encodePacked((_element)));
   }
 
   /** Get the full data */
@@ -354,8 +317,8 @@ library Player {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint32 hp, uint32 mp, uint32 atk, uint32 def, uint8[] memory nextCasts) internal {
-    bytes memory _data = encode(hp, mp, atk, def, nextCasts);
+  function set(bytes32 key, uint32 hp, uint32 atk, uint32 def, uint32[] memory nextCasts) internal {
+    bytes memory _data = encode(hp, atk, def, nextCasts);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -364,16 +327,8 @@ library Player {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(
-    IStore _store,
-    bytes32 key,
-    uint32 hp,
-    uint32 mp,
-    uint32 atk,
-    uint32 def,
-    uint8[] memory nextCasts
-  ) internal {
-    bytes memory _data = encode(hp, mp, atk, def, nextCasts);
+  function set(IStore _store, bytes32 key, uint32 hp, uint32 atk, uint32 def, uint32[] memory nextCasts) internal {
+    bytes memory _data = encode(hp, atk, def, nextCasts);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -383,52 +338,44 @@ library Player {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, PlayerData memory _table) internal {
-    set(key, _table.hp, _table.mp, _table.atk, _table.def, _table.nextCasts);
+    set(key, _table.hp, _table.atk, _table.def, _table.nextCasts);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, PlayerData memory _table) internal {
-    set(_store, key, _table.hp, _table.mp, _table.atk, _table.def, _table.nextCasts);
+    set(_store, key, _table.hp, _table.atk, _table.def, _table.nextCasts);
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal view returns (PlayerData memory _table) {
-    // 16 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 16));
+    // 12 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 12));
 
     _table.hp = (uint32(Bytes.slice4(_blob, 0)));
 
-    _table.mp = (uint32(Bytes.slice4(_blob, 4)));
+    _table.atk = (uint32(Bytes.slice4(_blob, 4)));
 
-    _table.atk = (uint32(Bytes.slice4(_blob, 8)));
-
-    _table.def = (uint32(Bytes.slice4(_blob, 12)));
+    _table.def = (uint32(Bytes.slice4(_blob, 8)));
 
     // Store trims the blob if dynamic fields are all empty
-    if (_blob.length > 16) {
+    if (_blob.length > 12) {
       uint256 _start;
       // skip static data length + dynamic lengths word
-      uint256 _end = 48;
+      uint256 _end = 44;
 
       _start = _end;
       _end += _encodedLengths.atIndex(0);
-      _table.nextCasts = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint8());
+      _table.nextCasts = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
     }
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(
-    uint32 hp,
-    uint32 mp,
-    uint32 atk,
-    uint32 def,
-    uint8[] memory nextCasts
-  ) internal view returns (bytes memory) {
+  function encode(uint32 hp, uint32 atk, uint32 def, uint32[] memory nextCasts) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](1);
-    _counters[0] = uint40(nextCasts.length * 1);
+    _counters[0] = uint40(nextCasts.length * 4);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
-    return abi.encodePacked(hp, mp, atk, def, _encodedLengths.unwrap(), EncodeArray.encode((nextCasts)));
+    return abi.encodePacked(hp, atk, def, _encodedLengths.unwrap(), EncodeArray.encode((nextCasts)));
   }
 
   /** Encode keys as a bytes32 array using this table's schema */

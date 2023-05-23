@@ -21,24 +21,32 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Skill
 bytes32 constant SkillTableId = _tableId;
 
 struct SkillData {
-  string name;
+  bytes32 name;
+  bytes32 category;
   uint32 atk;
   uint32 def;
-  uint32 heal;
+  uint32 hp;
   uint32 castTime;
   uint32 cooldown;
+  uint32 duration;
+  bool inUsed;
+  address owner;
 }
 
 library Skill {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](6);
-    _schema[0] = SchemaType.STRING;
-    _schema[1] = SchemaType.UINT32;
+    SchemaType[] memory _schema = new SchemaType[](10);
+    _schema[0] = SchemaType.BYTES32;
+    _schema[1] = SchemaType.BYTES32;
     _schema[2] = SchemaType.UINT32;
     _schema[3] = SchemaType.UINT32;
     _schema[4] = SchemaType.UINT32;
     _schema[5] = SchemaType.UINT32;
+    _schema[6] = SchemaType.UINT32;
+    _schema[7] = SchemaType.UINT32;
+    _schema[8] = SchemaType.BOOL;
+    _schema[9] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_schema);
   }
@@ -52,13 +60,17 @@ library Skill {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](6);
+    string[] memory _fieldNames = new string[](10);
     _fieldNames[0] = "name";
-    _fieldNames[1] = "atk";
-    _fieldNames[2] = "def";
-    _fieldNames[3] = "heal";
-    _fieldNames[4] = "castTime";
-    _fieldNames[5] = "cooldown";
+    _fieldNames[1] = "category";
+    _fieldNames[2] = "atk";
+    _fieldNames[3] = "def";
+    _fieldNames[4] = "hp";
+    _fieldNames[5] = "castTime";
+    _fieldNames[6] = "cooldown";
+    _fieldNames[7] = "duration";
+    _fieldNames[8] = "inUsed";
+    _fieldNames[9] = "owner";
     return ("Skill", _fieldNames);
   }
 
@@ -85,121 +97,71 @@ library Skill {
   }
 
   /** Get name */
-  function getName(bytes32 key) internal view returns (string memory name) {
+  function getName(bytes32 key) internal view returns (bytes32 name) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
-    return (string(_blob));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Get name (using the specified store) */
-  function getName(IStore _store, bytes32 key) internal view returns (string memory name) {
+  function getName(IStore _store, bytes32 key) internal view returns (bytes32 name) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
-    return (string(_blob));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Set name */
-  function setName(bytes32 key, string memory name) internal {
+  function setName(bytes32 key, bytes32 name) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, bytes((name)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((name)));
   }
 
   /** Set name (using the specified store) */
-  function setName(IStore _store, bytes32 key, string memory name) internal {
+  function setName(IStore _store, bytes32 key, bytes32 name) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 0, bytes((name)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((name)));
   }
 
-  /** Get the length of name */
-  function lengthName(bytes32 key) internal view returns (uint256) {
+  /** Get category */
+  function getCategory(bytes32 key) internal view returns (bytes32 category) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 0, getSchema());
-    return _byteLength / 1;
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    return (Bytes.slice32(_blob, 0));
   }
 
-  /** Get the length of name (using the specified store) */
-  function lengthName(IStore _store, bytes32 key) internal view returns (uint256) {
+  /** Get category (using the specified store) */
+  function getCategory(IStore _store, bytes32 key) internal view returns (bytes32 category) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 0, getSchema());
-    return _byteLength / 1;
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    return (Bytes.slice32(_blob, 0));
   }
 
-  /** Get an item of name (unchecked, returns invalid data if index overflows) */
-  function getItemName(bytes32 key, uint256 _index) internal view returns (string memory) {
+  /** Set category */
+  function setCategory(bytes32 key, bytes32 category) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
-    return (string(_blob));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((category)));
   }
 
-  /** Get an item of name (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemName(IStore _store, bytes32 key, uint256 _index) internal view returns (string memory) {
+  /** Set category (using the specified store) */
+  function setCategory(IStore _store, bytes32 key, bytes32 category) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
-    return (string(_blob));
-  }
-
-  /** Push a slice to name */
-  function pushName(bytes32 key, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    StoreSwitch.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /** Push a slice to name (using the specified store) */
-  function pushName(IStore _store, bytes32 key, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    _store.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /** Pop a slice from name */
-  function popName(bytes32 key) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    StoreSwitch.popFromField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /** Pop a slice from name (using the specified store) */
-  function popName(IStore _store, bytes32 key) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    _store.popFromField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /** Update a slice of name at `_index` */
-  function updateName(bytes32 key, uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    StoreSwitch.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
-  }
-
-  /** Update a slice of name (using the specified store) at `_index` */
-  function updateName(IStore _store, bytes32 key, uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32((key));
-
-    _store.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((category)));
   }
 
   /** Get atk */
@@ -207,7 +169,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -216,7 +178,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -225,7 +187,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((atk)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((atk)));
   }
 
   /** Set atk (using the specified store) */
@@ -233,7 +195,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((atk)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((atk)));
   }
 
   /** Get def */
@@ -241,7 +203,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -250,7 +212,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -259,7 +221,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((def)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((def)));
   }
 
   /** Set def (using the specified store) */
@@ -267,41 +229,41 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((def)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((def)));
   }
 
-  /** Get heal */
-  function getHeal(bytes32 key) internal view returns (uint32 heal) {
+  /** Get hp */
+  function getHp(bytes32 key) internal view returns (uint32 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Get heal (using the specified store) */
-  function getHeal(IStore _store, bytes32 key) internal view returns (uint32 heal) {
+  /** Get hp (using the specified store) */
+  function getHp(IStore _store, bytes32 key) internal view returns (uint32 hp) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
-  /** Set heal */
-  function setHeal(bytes32 key, uint32 heal) internal {
+  /** Set hp */
+  function setHp(bytes32 key, uint32 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((heal)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((hp)));
   }
 
-  /** Set heal (using the specified store) */
-  function setHeal(IStore _store, bytes32 key, uint32 heal) internal {
+  /** Set hp (using the specified store) */
+  function setHp(IStore _store, bytes32 key, uint32 hp) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((heal)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((hp)));
   }
 
   /** Get castTime */
@@ -309,7 +271,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -318,7 +280,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -327,7 +289,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((castTime)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((castTime)));
   }
 
   /** Set castTime (using the specified store) */
@@ -335,7 +297,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((castTime)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((castTime)));
   }
 
   /** Get cooldown */
@@ -343,7 +305,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -352,7 +314,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -361,7 +323,7 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((cooldown)));
+    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((cooldown)));
   }
 
   /** Set cooldown (using the specified store) */
@@ -369,7 +331,109 @@ library Skill {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
 
-    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((cooldown)));
+    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((cooldown)));
+  }
+
+  /** Get duration */
+  function getDuration(bytes32 key) internal view returns (uint32 duration) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
+    return (uint32(Bytes.slice4(_blob, 0)));
+  }
+
+  /** Get duration (using the specified store) */
+  function getDuration(IStore _store, bytes32 key) internal view returns (uint32 duration) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
+    return (uint32(Bytes.slice4(_blob, 0)));
+  }
+
+  /** Set duration */
+  function setDuration(bytes32 key, uint32 duration) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((duration)));
+  }
+
+  /** Set duration (using the specified store) */
+  function setDuration(IStore _store, bytes32 key, uint32 duration) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((duration)));
+  }
+
+  /** Get inUsed */
+  function getInUsed(bytes32 key) internal view returns (bool inUsed) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 8);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Get inUsed (using the specified store) */
+  function getInUsed(IStore _store, bytes32 key) internal view returns (bool inUsed) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 8);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Set inUsed */
+  function setInUsed(bytes32 key, bool inUsed) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 8, abi.encodePacked((inUsed)));
+  }
+
+  /** Set inUsed (using the specified store) */
+  function setInUsed(IStore _store, bytes32 key, bool inUsed) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 8, abi.encodePacked((inUsed)));
+  }
+
+  /** Get owner */
+  function getOwner(bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 9);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Get owner (using the specified store) */
+  function getOwner(IStore _store, bytes32 key) internal view returns (address owner) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 9);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Set owner */
+  function setOwner(bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 9, abi.encodePacked((owner)));
+  }
+
+  /** Set owner (using the specified store) */
+  function setOwner(IStore _store, bytes32 key, address owner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = bytes32((key));
+
+    _store.setField(_tableId, _keyTuple, 9, abi.encodePacked((owner)));
   }
 
   /** Get the full data */
@@ -393,14 +457,18 @@ library Skill {
   /** Set the full data using individual values */
   function set(
     bytes32 key,
-    string memory name,
+    bytes32 name,
+    bytes32 category,
     uint32 atk,
     uint32 def,
-    uint32 heal,
+    uint32 hp,
     uint32 castTime,
-    uint32 cooldown
+    uint32 cooldown,
+    uint32 duration,
+    bool inUsed,
+    address owner
   ) internal {
-    bytes memory _data = encode(name, atk, def, heal, castTime, cooldown);
+    bytes memory _data = encode(name, category, atk, def, hp, castTime, cooldown, duration, inUsed, owner);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -412,14 +480,18 @@ library Skill {
   function set(
     IStore _store,
     bytes32 key,
-    string memory name,
+    bytes32 name,
+    bytes32 category,
     uint32 atk,
     uint32 def,
-    uint32 heal,
+    uint32 hp,
     uint32 castTime,
-    uint32 cooldown
+    uint32 cooldown,
+    uint32 duration,
+    bool inUsed,
+    address owner
   ) internal {
-    bytes memory _data = encode(name, atk, def, heal, castTime, cooldown);
+    bytes memory _data = encode(name, category, atk, def, hp, castTime, cooldown, duration, inUsed, owner);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32((key));
@@ -429,55 +501,76 @@ library Skill {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, SkillData memory _table) internal {
-    set(key, _table.name, _table.atk, _table.def, _table.heal, _table.castTime, _table.cooldown);
+    set(
+      key,
+      _table.name,
+      _table.category,
+      _table.atk,
+      _table.def,
+      _table.hp,
+      _table.castTime,
+      _table.cooldown,
+      _table.duration,
+      _table.inUsed,
+      _table.owner
+    );
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, SkillData memory _table) internal {
-    set(_store, key, _table.name, _table.atk, _table.def, _table.heal, _table.castTime, _table.cooldown);
+    set(
+      _store,
+      key,
+      _table.name,
+      _table.category,
+      _table.atk,
+      _table.def,
+      _table.hp,
+      _table.castTime,
+      _table.cooldown,
+      _table.duration,
+      _table.inUsed,
+      _table.owner
+    );
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal view returns (SkillData memory _table) {
-    // 20 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 20));
+  function decode(bytes memory _blob) internal pure returns (SkillData memory _table) {
+    _table.name = (Bytes.slice32(_blob, 0));
 
-    _table.atk = (uint32(Bytes.slice4(_blob, 0)));
+    _table.category = (Bytes.slice32(_blob, 32));
 
-    _table.def = (uint32(Bytes.slice4(_blob, 4)));
+    _table.atk = (uint32(Bytes.slice4(_blob, 64)));
 
-    _table.heal = (uint32(Bytes.slice4(_blob, 8)));
+    _table.def = (uint32(Bytes.slice4(_blob, 68)));
 
-    _table.castTime = (uint32(Bytes.slice4(_blob, 12)));
+    _table.hp = (uint32(Bytes.slice4(_blob, 72)));
 
-    _table.cooldown = (uint32(Bytes.slice4(_blob, 16)));
+    _table.castTime = (uint32(Bytes.slice4(_blob, 76)));
 
-    // Store trims the blob if dynamic fields are all empty
-    if (_blob.length > 20) {
-      uint256 _start;
-      // skip static data length + dynamic lengths word
-      uint256 _end = 52;
+    _table.cooldown = (uint32(Bytes.slice4(_blob, 80)));
 
-      _start = _end;
-      _end += _encodedLengths.atIndex(0);
-      _table.name = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
-    }
+    _table.duration = (uint32(Bytes.slice4(_blob, 84)));
+
+    _table.inUsed = (_toBool(uint8(Bytes.slice1(_blob, 88))));
+
+    _table.owner = (address(Bytes.slice20(_blob, 89)));
   }
 
   /** Tightly pack full data using this table's schema */
   function encode(
-    string memory name,
+    bytes32 name,
+    bytes32 category,
     uint32 atk,
     uint32 def,
-    uint32 heal,
+    uint32 hp,
     uint32 castTime,
-    uint32 cooldown
+    uint32 cooldown,
+    uint32 duration,
+    bool inUsed,
+    address owner
   ) internal view returns (bytes memory) {
-    uint40[] memory _counters = new uint40[](1);
-    _counters[0] = uint40(bytes(name).length);
-    PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
-
-    return abi.encodePacked(atk, def, heal, castTime, cooldown, _encodedLengths.unwrap(), bytes((name)));
+    return abi.encodePacked(name, category, atk, def, hp, castTime, cooldown, duration, inUsed, owner);
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
@@ -500,5 +593,11 @@ library Skill {
     _keyTuple[0] = bytes32((key));
 
     _store.deleteRecord(_tableId, _keyTuple);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

@@ -5,33 +5,14 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Account: (() => {
-      const tableId = new TableId("", "Account");
+    Avatar: (() => {
+      const tableId = new TableId("", "Avatar");
       return defineComponent(
         world,
         {
-          name: RecsType.String,
-          skillSet: RecsType.StringArray,
-          areanaId: RecsType.String,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    Player: (() => {
-      const tableId = new TableId("", "Player");
-      return defineComponent(
-        world,
-        {
-          hp: RecsType.Number,
-          mp: RecsType.Number,
-          atk: RecsType.Number,
-          def: RecsType.Number,
-          nextCasts: RecsType.NumberArray,
+          inUsed: RecsType.Boolean,
+          owner: RecsType.String,
+          url: RecsType.String,
         },
         {
           metadata: {
@@ -47,11 +28,68 @@ export function defineContractComponents(world: World) {
         world,
         {
           name: RecsType.String,
+          category: RecsType.String,
           atk: RecsType.Number,
           def: RecsType.Number,
-          heal: RecsType.Number,
+          hp: RecsType.Number,
           castTime: RecsType.Number,
           cooldown: RecsType.Number,
+          duration: RecsType.Number,
+          inUsed: RecsType.Boolean,
+          owner: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Account: (() => {
+      const tableId = new TableId("", "Account");
+      return defineComponent(
+        world,
+        {
+          initialized: RecsType.Boolean,
+          avatar: RecsType.String,
+          arena: RecsType.String,
+          name: RecsType.String,
+          skillSet: RecsType.StringArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Arena: (() => {
+      const tableId = new TableId("", "Arena");
+      return defineComponent(
+        world,
+        {
+          status: RecsType.String,
+          players: RecsType.StringArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Player: (() => {
+      const tableId = new TableId("", "Player");
+      return defineComponent(
+        world,
+        {
+          hp: RecsType.Number,
+          atk: RecsType.Number,
+          def: RecsType.Number,
+          nextCasts: RecsType.NumberArray,
         },
         {
           metadata: {

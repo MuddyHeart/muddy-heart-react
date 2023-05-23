@@ -6,7 +6,9 @@ pragma solidity >=0.8.0;
 interface IAccountSystem {
   function createAccount(string memory name) external;
 
-  function updateName(string memory name) external;
+  function setName(string memory name) external;
 
-  function setSkills(bytes32[] memory skills) external;
+  function setAvatar(bytes32 id) external;
+
+  function setSkill(bytes32 id, uint8 slotIndex) external;
 }
