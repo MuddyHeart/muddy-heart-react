@@ -1,9 +1,11 @@
 import SkillItem from "./SkillItem";
 import useSkillStore from "../../stores/SkillStore";
 import { useSkillset } from "../../hooks/useSkillset";
+import { useEffect } from "react";
 
 export default function SkillBar() {
   const skills = useSkillset();
+
   const exectueSkill = useSkillStore((state) => state.exectueSkill);
 
   return (
