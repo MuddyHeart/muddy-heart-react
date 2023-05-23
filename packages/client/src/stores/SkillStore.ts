@@ -3,6 +3,7 @@ import {create} from "zustand";
 type skillSlotType = "skill1"|"skill2"|"skill3";
 
 export interface ISkillItem {
+    id:string
     name:string,
     isTargetType:boolean,
     cooldown:number,
@@ -14,7 +15,7 @@ const store = (set:any, get:any) => ({
     skill2 : {} as ISkillItem,
     skill3 : {} as ISkillItem,
     selectingTargetSkill:"" as string,
-    selectingTargetSkillName:"" as string,
+    selectingTargetSkillId:"" as string,
     isSelectingTarget:false as boolean,
     setSkillSet:async(skills:ISkillItem[])=>{
         set({skill1:skills[0]});
@@ -30,7 +31,7 @@ const store = (set:any, get:any) => ({
         if(get().isSelectingTarget) get().cancelTargetSkill();
         if(get()[skill].isTargetType) {
             set({selectingTargetSkill:skill});
-            set({selectingTargetSkillName:get()[skill].name});
+            set({selectingTargetSkillId:get()[skill].id});
             set({isSelectingTarget:true});
         }else {
             //await execute skill onchain
@@ -39,7 +40,7 @@ const store = (set:any, get:any) => ({
     },
     cancelTargetSkill: async() => {
         set({selectingTargetSkill:""});
-        set({selectingTargetSkillName:""});
+        set({selectingTargetSkillId:""});
         set({isSelectingTarget:false});
     },
     exectueTargetSkill : async(player:string) => {

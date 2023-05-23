@@ -10,11 +10,11 @@ export const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
+        <Route index element={<CreateUser />} />
         <Route path="game" element={<Game />} />
         <Route path="waiting" element={<WaitArena />} />
         <Route path='select-skill' element={<SelectSkill />} />
-        <Route path="create-user" element={<CreateUser />} />
+        <Route path="home" element={<Home />} />
       </Route>
     )
   );

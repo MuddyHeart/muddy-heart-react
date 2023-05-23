@@ -9,7 +9,7 @@ interface SkillItemProps {
 export default function SkillItem({ skillItem, handleSkillUse }: SkillItemProps) {
 
     const [isSelectingTargetSkill, setIsSelectingTargetSkill] = useState(false);
-    const selectingTargetSkillName = useSkillStore(state => state.selectingTargetSkillName);
+    const selectingTargetSkillId = useSkillStore(state => state.selectingTargetSkillId);
     const cancelTargetSkill = useSkillStore(state => state.cancelTargetSkill);
 
     const [now, setNow] = useState(new Date());
@@ -30,10 +30,10 @@ export default function SkillItem({ skillItem, handleSkillUse }: SkillItemProps)
     }
 
     useEffect(() => {
-        if (selectingTargetSkillName === skillItem.name) {
+        if (selectingTargetSkillId === skillItem.id) {
             setIsSelectingTargetSkill(true)
         } else setIsSelectingTargetSkill(false);
-    }, [selectingTargetSkillName, skillItem])
+    }, [selectingTargetSkillId, skillItem])
 
     return (
         <div onClick={clickHandler} className="hover:scale-110 duration-200 cursor-pointer w-[85px] h-[85px] relative select-none" >

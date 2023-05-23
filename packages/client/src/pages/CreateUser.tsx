@@ -8,7 +8,7 @@ export default function CreateUser() {
   const [name, setName] = useState("");
 
   const onAccept = () => {
-    navigate("/select-skill");
+    navigate("/home");
   };
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-opacity-60 bg-black px-36">
@@ -36,9 +36,8 @@ export default function CreateUser() {
             >
               <img
                 src={createButton}
-                className={`animate-none ${
-                  accept ? "opacity-50" : "hover:animate-pulse"
-                } `}
+                className={`animate-none ${accept ? "opacity-50" : "hover:animate-pulse"
+                  } `}
               />
             </button>
           </div>
