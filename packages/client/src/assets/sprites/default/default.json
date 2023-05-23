@@ -1,0 +1,13 @@
+[
+  {
+    "state": "Idle",
+    "sprite": "Default",
+    "frame": {
+      "start": 1,
+      "end": 5
+    },
+    "width": 384,
+    "height": 192,
+    "fps": 5
+  }
+]
