@@ -15,7 +15,6 @@ export default function Arena() {
       <div className="w-[330px] h-[280px] mt-28 relative">
         <div className="absolute">
           {/* Player 1 */}
-          <button onClick={() => setState(!state)}>x</button>
           <Player
             scale={2.5}
             sprites={{ Warrior, WarriorHit }}

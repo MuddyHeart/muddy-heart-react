@@ -10,6 +10,7 @@ interface IAction {
   height: number;
   width: number;
   fps: number;
+  scale?: number;
 }
 
 interface IUseFrameAnimation {

@@ -1,0 +1,14 @@
+[
+  {
+    "state": "Buff",
+    "sprite": "Buff",
+    "frame": {
+      "start": 1,
+      "end": 5
+    },
+    "width": 187,
+    "height": 75,
+    "fps": 4,
+    "scale": 1.5
+  }
+]
