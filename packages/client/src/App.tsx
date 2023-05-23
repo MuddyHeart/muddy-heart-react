@@ -2,21 +2,23 @@ import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } 
 import Home from './pages/Home';
 import Game from './pages/Game';
 import MainLayout from './MainLayout';
+import SelectSkill from './pages/SelectSkill';
 
 export const App = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<MainLayout/>} >
+      <Route path="/" element={<MainLayout />} >
         <Route index element={<Home />} />
         <Route path='game' element={<Game />} />
+        <Route path='select-skill' element={<SelectSkill />} />
       </Route>
     )
   )
 
   return (
     <>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </>
   );
 };

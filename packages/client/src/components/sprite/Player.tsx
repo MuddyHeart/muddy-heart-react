@@ -1,4 +1,5 @@
 import { useFrameAnimation } from "../../hooks/useFrameAnimation";
+import useSkillStore from "../../stores/SkillStore";
 import ProgressBar from "../loading/ProgressBar";
 import Animation from "./Animation";
 
@@ -9,6 +10,7 @@ interface IAction {
     end: number;
   };
 }
+
 interface IPlayer {
   sprite: string;
   fps?: number;
@@ -44,8 +46,19 @@ const Player = ({
     actionConfig,
     state,
   });
+
+  const isSelectingTarget = useSkillStore(state => state.isSelectingTarget);
+  const exectueTargetSkill = useSkillStore(state => state.exectueTargetSkill);
+
+  const isMyCharacter = false;
+  const isTargetable = isSelectingTarget && !isMyCharacter;
+
+  const clickHandler = () => {
+    if (isTargetable) exectueTargetSkill(name);
+  }
+
   return (
-    <div className="flex flex-col items-center sword-cursor">
+    <div onClick={clickHandler} className={`flex flex-col items-center ${isTargetable ? "sword-cursor" : "cursor-default"} `}>
       <div className="flex flex-col items-center">
         <div className="text-white text-sm bit-font">{name}</div>
         <ProgressBar
