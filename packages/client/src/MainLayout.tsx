@@ -11,7 +11,7 @@ export default function MainLayout() {
 
   return (
     <div className="w-full h-screen bg-gray-100">
-      {true ? (
+      {isSyncStateLive ? (
         <div className="bg-main-purple w-full h-screen overflow-x-scroll grid place-items-center">
           <div
             className="relative w-[1200px] h-[690px]"
