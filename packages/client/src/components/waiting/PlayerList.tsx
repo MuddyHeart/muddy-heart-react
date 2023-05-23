@@ -6,8 +6,6 @@ const PlayerList = () => {
   const players = [
     "enter",
     "enter",
-    "accept",
-    "wait",
     "wait",
     "wait",
     "wait",
@@ -19,11 +17,10 @@ const PlayerList = () => {
       return (
         <div
           key={key}
-          className={`${
-            player !== "wait"
-              ? "border bottom-2 border-yellow-500 bg-yellow-600 bg-opacity-10"
-              : "bg-black bg-opacity-50"
-          }`}
+          className={`${player !== "wait"
+            ? "border bottom-2 border-yellow-500 bg-yellow-600 bg-opacity-10"
+            : "bg-black bg-opacity-50"
+            }`}
         >
           <div className="relative">
             <img
@@ -48,7 +45,7 @@ const PlayerList = () => {
     <div className="flex flex-col items-center space-y-3">
       <div className="flex space-x-5">{playerComponent()}</div>
       <div className="bit-font text-white text-xs text-end w-full">
-        5/8 Accepted
+        2/6 players in the room.
       </div>
     </div>
   );
