@@ -83,7 +83,7 @@ const Player = ({
   const isTargetable = isSelectingTarget && !isMyCharacter;
 
   const clickHandler = () => {
-    setEffect("Heal");
+    setEffect("Slash");
     if (isTargetable) exectueTargetSkill(name);
   };
   console.log(SpriteE);
