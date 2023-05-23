@@ -7,24 +7,40 @@ import { useEffect, useState } from "react";
 import { useSkillInventory } from "../hooks/useSkillInventory";
 import { useSkillset } from "../hooks/useSkillset";
 import { useMUD } from "../MUDContext";
+import { entityToBytes32 } from "../utils/entityToBytes32";
 
 export default function SelectSkill() {
   const navigate = useNavigate();
 
+  const {
+    systemCalls: { createRandomSkill, setSkill },
+  } = useMUD();
+
   const skillInInventory = useSkillInventory();
   const selectedSkill = useSkillset();
 
+  const [latestSkill, setLatestSkillIndex] = useState(0);
+
   const handleSelectSkill = async () => {
-    // setSkillSet(selectedSkill);
     navigate("/home");
   };
 
-  const changeSelectedSkill = (id: string) => {
-    // if (!selectedSkill.includes(skill) && selectedSkill.length >= 3) {
-    // const tmpSelectedSkill = selectedSkill;
-    // tmpSelectedSkill.shift();
-    // setSelectedSkill([...tmpSelectedSkill, skill]);
-    // }
+  const changeSelectedSkill = (index: number) => {
+    const allSkills = [...selectedSkill, ...skillInInventory];
+
+    const selected = allSkills[index];
+
+    if (!selected.inUsed) {
+      setSkill(entityToBytes32(selected.id), latestSkill);
+      setLatestSkillIndex((latestSkill + 1) % 3);
+    }
+  };
+
+  const handleRandomSkill = () => {
+    const len = [...skillInInventory, ...selectedSkill].length;
+    if (len < 6) {
+      createRandomSkill();
+    }
   };
 
   const tmpCondition = false;
@@ -33,7 +49,10 @@ export default function SelectSkill() {
     <div className="w-full h-full flex flex-col justify-center items-center bg-opacity-60 bg-black px-36">
       <div className="relative w-[900px] h-[270px] bg-black bg-opacity-40 border border-orange-500 border-opacity-20 rounded-md">
         <div className="absolute -top-4 w-full">
-          <div className="text-center bit-font text-white text-2xl">
+          <div
+            className="text-center bit-font text-white text-2xl"
+            onClick={handleRandomSkill}
+          >
             Select 3 Skill
           </div>
         </div>
@@ -42,10 +61,10 @@ export default function SelectSkill() {
             return (
               <div key={index}>
                 <div
-                  onClick={() => changeSelectedSkill(skillItem.id)}
+                  onClick={() => changeSelectedSkill(index)}
                   className="w-[85px] h-[85px] relative"
                 >
-                  {selectedSkill.find((s) => s.id === skillItem.id) ? (
+                  {skillItem.inUsed ? (
                     <div className="w-full h-full bg-black bg-opacity-50 absolute z-20 flex items-center justify-center">
                       <p className="text-green-400 bit-font text-2xl cursor-default">
                         E
