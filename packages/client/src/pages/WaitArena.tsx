@@ -13,7 +13,7 @@ export default function WaitArena() {
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-opacity-60 bg-black px-36">
-      <div className="relative w-[900px] h-[270px] bg-black bg-opacity-40 border border-orange-500 border-opacity-20 rounded-md w-full">
+      <div className="relative w-[900px] h-[270px] bg-black bg-opacity-40 border border-orange-500 border-opacity-20 rounded-md">
         <div className="absolute -top-4 w-full">
           <div className="text-center bit-font text-white text-2xl">
             Waiting for Player
