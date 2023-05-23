@@ -1,33 +1,94 @@
-import useSkillStore from "../stores/SkillStore"
+import useSkillStore, { ISkillItem } from "../stores/SkillStore"
 import { useNavigate } from "react-router-dom";
-import StartButton from "../public/button/start_button.png"
+import BackButton from "../public/button/back_button.png";
+import SaveButton from "../public/button/save_button.png";
+import SkillItem from "../components/skill/SkillItem";
+import { useState } from "react";
 
 export default function SelectSkill() {
     const setSkillSet = useSkillStore((state => state.setSkillSet));
     const navigate = useNavigate();
 
+    const skillInInventory = [
+        {
+            id: "1",
+            name: "attack",
+            isTargetType: true,
+            cooldown: 3000,
+            currentCooldown: 0
+        },
+        {
+            id: "2",
+            name: "bash",
+            isTargetType: true,
+            cooldown: 5000,
+            currentCooldown: 0
+        },
+        {
+            id: "3",
+            name: "defense",
+            isTargetType: false,
+            cooldown: 10000,
+            currentCooldown: 0
+        },
+        {
+            id: "4",
+            name: "heal",
+            isTargetType: false,
+            cooldown: 15000,
+            currentCooldown: 0
+        },
+        {
+            id: "5",
+            name: "attack",
+            isTargetType: true,
+            cooldown: 3000,
+            currentCooldown: 0
+        },
+        {
+            id: "6",
+            name: "defense",
+            isTargetType: false,
+            cooldown: 10000,
+            currentCooldown: 0
+        },
+    ];
+
+    const [selectedSkill, setSelectedSkill] = useState([
+        {
+            id: "1",
+            name: "attack",
+            isTargetType: true,
+            cooldown: 3000,
+            currentCooldown: 0
+        },
+        {
+            id: "2",
+            name: "bash",
+            isTargetType: true,
+            cooldown: 5000,
+            currentCooldown: 0
+        },
+        {
+            id: "3",
+            name: "defense",
+            isTargetType: false,
+            cooldown: 10000,
+            currentCooldown: 0
+        }
+    ])
+
     const handleSelectSkill = async () => {
-        setSkillSet([
-            {
-                name: "attack",
-                isTargetType: true,
-                cooldown: 3000,
-                currentCooldown: 0
-            },
-            {
-                name: "defense",
-                isTargetType: false,
-                cooldown: 10000,
-                currentCooldown: 0
-            },
-            {
-                name: "heal",
-                isTargetType: false,
-                cooldown: 15000,
-                currentCooldown: 0
-            }
-        ])
-        navigate("/waiting");
+        setSkillSet(selectedSkill);
+        navigate("/home");
+    };
+
+    const changeSelectedSkill = (skill: ISkillItem) => {
+        if (!selectedSkill.includes(skill) && selectedSkill.length >= 3) {
+            const tmpSelectedSkill = selectedSkill;
+            tmpSelectedSkill.shift();
+            setSelectedSkill([...tmpSelectedSkill, skill]);
+        }
     };
 
     const tmpCondition = false;
@@ -40,12 +101,34 @@ export default function SelectSkill() {
                         Select 3 Skill
                     </div>
                 </div>
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-full w-full space-x-3">
+                    {skillInInventory.map((skillItem, index) => {
+                        return (
+                            <div key={index}>
+                                <div onClick={() => changeSelectedSkill(skillItem)} className="w-[85px] h-[85px] relative">
+                                    {selectedSkill.find(s => s.id === skillItem.id) ? (
+                                        <div className="w-full h-full bg-black bg-opacity-50 absolute z-20 flex items-center justify-center">
+                                            <p className="text-green-400 bit-font text-2xl cursor-default">E</p>
+                                        </div>
+                                    ) : null}
+                                    <div className="z-10">
+                                        <SkillItem skillItem={skillItem} handleSkillUse={() => { return; }} />
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center space-x-5">
                     <button className={`${tmpCondition ? "" : "hover:scale-110 duration-200"}`} onClick={handleSelectSkill} disabled={tmpCondition}>
                         <img
-                            src={StartButton}
+                            src={SaveButton}
+                            className={`-mt-8 animate-none ${tmpCondition ? "opacity-50" : "hover:animate-pulse"} `}
+                        />
+                    </button>
+                    <button className={`${tmpCondition ? "" : "hover:scale-110 duration-200"}`} onClick={() => navigate("/home")} disabled={tmpCondition}>
+                        <img
+                            src={BackButton}
                             className={`-mt-8 animate-none ${tmpCondition ? "opacity-50" : "hover:animate-pulse"} `}
                         />
                     </button>
