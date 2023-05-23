@@ -1,3 +1,5 @@
+![Cover](https://github.com/MuddyHeart/muddy-heart-react/assets/51711913/50d7f558-3b34-4c34-879e-041833ba37b9)
+
 An On-chain action RPG game built with MUD
 Run the project locally
 1. Git Clone
