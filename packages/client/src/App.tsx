@@ -5,6 +5,8 @@ import Game from './pages/Game';
 import MainLayout from './MainLayout';
 import SelectSkill from './pages/SelectSkill';
 import CreateUser from './pages/CreateUser';
+import Defeat from "./pages/Defeat";
+import Victory from "./pages/Victory";
 
 export const App = () => {
   const router = createBrowserRouter(
@@ -15,6 +17,8 @@ export const App = () => {
         <Route path="waiting" element={<WaitArena />} />
         <Route path='select-skill' element={<SelectSkill />} />
         <Route path="home" element={<Home />} />
+        <Route path="defeat" element={<Defeat />} />
+        <Route path="victory" element={<Victory />} />
       </Route>
     )
   );
