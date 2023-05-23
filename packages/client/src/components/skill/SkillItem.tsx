@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useSkillStore, { ISkillItem } from "../../stores/SkillStore";
 
 interface SkillItemProps {
-    skillItem: ISkillItem;
+    skillItem: Partial<ISkillItem>;
     handleSkillUse: () => void;
 }
 
@@ -21,7 +21,8 @@ export default function SkillItem({ skillItem, handleSkillUse }: SkillItemProps)
         return () => clearInterval(iv);
     }, []);
 
-    const currentCD = Math.round(Math.max(skillItem.currentCooldown - now.valueOf(), 0) / 1000);
+    const currentCD = 0;
+    // const currentCD = Math.round(Math.max(skillItem.currentCooldown - now.valueOf(), 0) / 1000);
     const isCooldown = currentCD > 0;
 
     const clickHandler = () => {
@@ -33,7 +34,7 @@ export default function SkillItem({ skillItem, handleSkillUse }: SkillItemProps)
         if (selectingTargetSkillId === skillItem.id) {
             setIsSelectingTargetSkill(true)
         } else setIsSelectingTargetSkill(false);
-    }, [selectingTargetSkillId, skillItem])
+    }, [selectingTargetSkillId, skillItem]);
 
     return (
         <div onClick={clickHandler} className="hover:scale-110 duration-200 cursor-pointer w-[85px] h-[85px] relative select-none" >

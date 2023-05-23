@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import createButton from "../public/button/create_button.png";
+import { useMUD } from "../MUDContext";
+import { useAccountData } from "../hooks/useAccountData";
 
 export default function CreateUser() {
   const navigate = useNavigate();
   const [accept, setAccept] = useState(false);
   const [name, setName] = useState("");
 
+  const {
+    systemCalls: { createAccount },
+    network: { network },
+  } = useMUD();
+
+  const accountData = useAccountData();
+
   const onAccept = () => {
-    navigate("/home");
+    createAccount(name);
   };
+
+  useEffect(() => {
+    if (accountData) {
+      navigate("/home");
+    }
+  }, [accountData]);
+
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-opacity-60 bg-black px-36">
       <div className="w-[700px] h-[270px] bg-black bg-opacity-40 border border-orange-500 border-opacity-20 rounded-md">
@@ -36,8 +52,9 @@ export default function CreateUser() {
             >
               <img
                 src={createButton}
-                className={`animate-none ${accept ? "opacity-50" : "hover:animate-pulse"
-                  } `}
+                className={`animate-none ${
+                  accept ? "opacity-50" : "hover:animate-pulse"
+                } `}
               />
             </button>
           </div>

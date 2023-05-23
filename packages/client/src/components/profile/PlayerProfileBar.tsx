@@ -1,7 +1,8 @@
 import WarriorProfile from "../../assets/profiles/warrior-profile.png";
+import HPBar from "./HPBar";
 import { useAccountData } from "../../hooks/useAccountData";
 
-const ProfileBar = () => {
+const PlayerBar = () => {
   const accountData = useAccountData();
 
   if (!accountData) return <></>;
@@ -11,9 +12,10 @@ const ProfileBar = () => {
       <img src={WarriorProfile} width={64} height={64} />
       <div className="">
         <div className="bit-font text-white">{accountData.name}</div>
+        <HPBar currentHP={20} maxHP={85} />
       </div>
     </div>
   );
 };
 
-export default ProfileBar;
+export default PlayerBar;
