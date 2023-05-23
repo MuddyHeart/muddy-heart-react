@@ -12,6 +12,7 @@ interface ISpriteAnimation {
   stopLastFrame?: boolean;
   onClick?: () => void;
   className?: string;
+  onEnd?: () => void;
 }
 
 const SpriteAnimation = ({
@@ -26,6 +27,7 @@ const SpriteAnimation = ({
   stopLastFrame = false,
   onClick,
   className = "",
+  onEnd,
 }: ISpriteAnimation) => {
   return (
     <div onClick={onClick} className={className}>
@@ -42,6 +44,7 @@ const SpriteAnimation = ({
         reset={!startAnimate}
         wrapAfter={endFrame}
         frameCount={endFrame}
+        onEnd={onEnd}
       />
     </div>
   );

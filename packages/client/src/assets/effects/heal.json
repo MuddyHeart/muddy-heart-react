@@ -1,0 +1,14 @@
+[
+  {
+    "state": "Heal",
+    "sprite": "Heal",
+    "frame": {
+      "start": 1,
+      "end": 23
+    },
+    "width": 187,
+    "height": 75,
+    "fps": 23,
+    "scale": 1
+  }
+]
