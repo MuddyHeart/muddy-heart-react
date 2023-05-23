@@ -1,0 +1,24 @@
+[
+  {
+    "state": "Idle",
+    "sprite": "Warrior",
+    "frame": {
+      "start": 1,
+      "end": 7
+    },
+    "width": 248,
+    "height": 184,
+    "fps": 5
+  },
+  {
+    "state": "Hit",
+    "sprite": "WarriorHit",
+    "frame": {
+      "start": 1,
+      "end": 6
+    },
+    "width": 300,
+    "height": 224,
+    "fps": 5
+  }
+]
