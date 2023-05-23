@@ -1,0 +1,14 @@
+[
+  {
+    "state": "Slash2",
+    "sprite": "Slash2",
+    "frame": {
+      "start": 1,
+      "end": 6
+    },
+    "width": 126,
+    "height": 150,
+    "fps": 3,
+    "scale": 2
+  }
+]
