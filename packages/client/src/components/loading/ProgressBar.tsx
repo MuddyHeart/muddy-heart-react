@@ -17,7 +17,7 @@ const ProgressBar = ({
 }: IProgressBar) => {
   return (
     <div
-      className={`${border && borderStyle} ${bgBar} ${barSize} rounded-full border`}
+      className={`${border && borderStyle} ${bgBar} ${barSize} rounded-full`}
     >
       <div
         className={`${bgProgress} py-1 rounded-full transition-all duration-300`}
