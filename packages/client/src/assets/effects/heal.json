@@ -6,9 +6,9 @@
       "start": 1,
       "end": 23
     },
-    "width": 187,
-    "height": 75,
-    "fps": 23,
-    "scale": 1
+    "width": 768,
+    "height": 768,
+    "fps": 30,
+    "scale": 7
   }
 ]

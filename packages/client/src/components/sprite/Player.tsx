@@ -86,6 +86,7 @@ const Player = ({
     setEffect("Heal");
     if (isTargetable) exectueTargetSkill(name);
   };
+  console.log(SpriteE);
 
   const effectComponent = useCallback(() => {
     if (effectSkill.length <= 0) return;
